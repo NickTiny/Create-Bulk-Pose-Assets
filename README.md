@@ -6,7 +6,7 @@
 
 # Latest Release
 
-You can find the latest release [here](https://github.com/NickTiny/poselibquickactions/releases/tag/alpha).
+You can find the latest release [here](https://github.com/NickTiny/Create-Bulk-Pose-Assets/releases/download/alpha/Create-Bulk-Pose-Assets.py).
 
 # **Usage**
 
