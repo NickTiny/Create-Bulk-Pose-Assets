@@ -12,68 +12,111 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name" : "Poselib Quick Actions",
-    "author" : "Nick Alberelli",
-    "description" : "",
-    "blender" : (2, 80, 0),
-    "version" : (0, 0, 1),
-    "location" : "",
-    "warning" : "",
-    "category" : "Generic"
+    "name": "Poselib Quick Actions",
+    "author": "Nick Alberelli",
+    "description": "",
+    "blender": (2, 80, 0),
+    "version": (0, 0, 1),
+    "location": "",
+    "warning": "",
+    "category": "Generic",
 }
 
 
+from cgitb import text
+from sys import _current_frames
 import bpy
+import math
+
 
 bpy.types.Scene.target = bpy.props.PointerProperty(type=bpy.types.Object)
 
 classes = []
 
-class PoseActionOperator(bpy.types.Operator):   
-    """Run Pose Action1"""
+
+class PoseActionOperator(bpy.types.Operator):
+    """Create Pose Assets from selected frames on active bones. Naming convention is Prefix+Frame#."""
+
     bl_idname = "view3d.pose_actions"
-    bl_label = "Run Pose Action1"
+    bl_label = "Create Bulk Pose Assets"
+    usertext: bpy.props.StringProperty(name="Prefix")
 
     def execute(self, context):
-        sce = bpy.context.scene
         ob = bpy.context.object
-        action_name = (ob.animation_data.action.name)
-        
-        if ob is not None:
-            if ob.animation_data is not None and ob.animation_data.action is not None:
-                action = ob.animation_data.action
-                print()
-                print("Keyframes")
-                
-                for fcu in action.fcurves:
-                    print(fcu)
-                   
+        sc = bpy.context.scene
+        action_name = ob.animation_data.action.name
 
+        # get keyframes of object list
+        def get_keyframes(obj_list):
+            keyframes = []
+            for obj in obj_list:
+                anim = obj.animation_data
+                if anim is not None and anim.action is not None:
+                    for fcu in anim.action.fcurves:
+                        for keyframe in fcu.keyframe_points:
+                            x, y = keyframe.co
+                            if x not in keyframes:
+                                keyframes.append((math.ceil(x)))
+            return keyframes
 
+        # get all selected objects
+        selection = bpy.context.selected_objects
 
+        # check if selection is not empty
+        if selection:
+
+            # get all frames with assigned keyframes
+            keys = get_keyframes(selection)
+
+            # print all keyframes
+            print(keys)
+
+            # print first and last keyframe
+            print("{} {}".format("first keyframe:", keys[0]))
+            print("{} {}".format("last keyframe:", keys[-1]))
+
+        else:
+            print("nothing selected")
+
+        # Execute adding to pose lib
+
+        for key in keys:
+            bpy.context.scene.frame_set(key)
+            bpy.ops.poselib.create_pose_asset(activate_new_action=True)
+            bpy.context.object.animation_data.action.name = (
+                self.usertext + " - " + str(key)
+            )
+            bpy.ops.poselib.restore_previous_action()
         return {"FINISHED"}
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
 
 classes.append(PoseActionOperator)
 
+
 class PoseActionPanel(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_pose_actions_panel"
-    bl_space_type = "VIEW_3D"
+    bl_space_type = "DOPESHEET_EDITOR"
     bl_region_type = "UI"
-    bl_category = "poseaction1"
-    bl_label = "poseactions"
+    bl_label = "Create Bulk Pose Assets"
+    bl_category = "Pose Library"
 
     def draw(self, context):
-        self.layout.operator("view3d.pose_actions")
-            
+        if bpy.context.mode == "POSE":
+            # self.layout.prop(strings)
+            self.layout.operator("view3d.pose_actions")
+
+
 classes.append(PoseActionPanel)
 
 
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
-        
+
 
 def unregister():
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls)    
-        
+        bpy.utils.unregister_class(cls)
