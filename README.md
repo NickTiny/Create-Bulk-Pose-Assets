@@ -4,6 +4,10 @@
 **Compatability**
 - Blender Version: 3.2.0 Beta, branch: master, commit date: 2022-05-02 20:13, hash: `rB62ef1c08af9a` 
 
+# Latest Release
+
+You can find the latest release [here](https://github.com/NickTiny/poselibquickactions/releases/tag/alpha).
+
 # **Usage**
 
 Using **Create Bulk Pose Assets** is very similar to Vanilla Blender's **Create Pose Asset**. The difference is that **Create Bulk Pose Assets** will automatically create new Pose Assets using the "prefix" and current frame number. It uses the frames in the current action to generate the assets. 
