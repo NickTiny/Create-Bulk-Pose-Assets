@@ -12,14 +12,14 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name": "Poselib Quick Actions",
+    "name": "Create Bulk Pose Assets",
     "author": "Nick Alberelli",
-    "description": "",
-    "blender": (2, 80, 0),
+    "description": "Allows for the bulk creation of Pose Library Assets, from the action editor.",
+    "blender": (3, 2, 0),
     "version": (0, 0, 1),
-    "location": "",
-    "warning": "",
-    "category": "Generic",
+    "location": "Dopesheet Editor > Sidebar > Pose Library > Create Bulk Pose Assets",
+    "warning": "This addon is in an alpha state",
+    "category": "Animation",
 }
 
 
@@ -32,6 +32,14 @@ import math
 bpy.types.Scene.target = bpy.props.PointerProperty(type=bpy.types.Object)
 
 classes = []
+
+
+class QueryProps(bpy.types.PropertyGroup):
+
+    query: bpy.props.StringProperty(default="testtest")
+
+
+classes.append(QueryProps)
 
 
 class PoseActionOperator(bpy.types.Operator):
@@ -81,16 +89,12 @@ class PoseActionOperator(bpy.types.Operator):
         # Execute adding to pose lib
 
         for key in keys:
+            usertext = bpy.data.scenes["Scene"].QueryProps.query
             bpy.context.scene.frame_set(key)
             bpy.ops.poselib.create_pose_asset(activate_new_action=True)
-            bpy.context.object.animation_data.action.name = (
-                self.usertext + " - " + str(key)
-            )
+            bpy.context.object.animation_data.action.name = usertext + " - " + str(key)
             bpy.ops.poselib.restore_previous_action()
         return {"FINISHED"}
-
-    def invoke(self, context, event):
-        return context.window_manager.invoke_props_dialog(self)
 
 
 classes.append(PoseActionOperator)
@@ -106,7 +110,16 @@ class PoseActionPanel(bpy.types.Panel):
     def draw(self, context):
         if bpy.context.mode == "POSE":
             # self.layout.prop(strings)
-            self.layout.operator("view3d.pose_actions")
+            props = bpy.context.scene.QueryProps
+            layout = self.layout
+            col = layout.column(align=True)
+            rowsub = col.row(align=True)
+            rowsub.label(text="Prefix:")
+            rowsub = col.row(align=True)
+            col2 = layout.column()
+            rowsub2 = col2.row()
+            rowsub2.operator("view3d.pose_actions")
+            rowsub.prop(props, "query", text="")
 
 
 classes.append(PoseActionPanel)
@@ -115,8 +128,12 @@ classes.append(PoseActionPanel)
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
+    # Register QueryProps
+    bpy.types.Scene.QueryProps = bpy.props.PointerProperty(type=QueryProps)
 
 
 def unregister():
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
+    # $ delete QueryProps on unregister
+    del bpy.types.Scene.QueryProps
