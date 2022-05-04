@@ -47,7 +47,7 @@ class PoseActionOperator(bpy.types.Operator):
 
     bl_idname = "view3d.pose_actions"
     bl_label = "Create Bulk Pose Assets"
-    usertext: bpy.props.StringProperty(name="Prefix")
+    bulkposeprefix: bpy.props.StringProperty(name="Prefix")
 
     def execute(self, context):
         ob = bpy.context.object
@@ -72,28 +72,20 @@ class PoseActionOperator(bpy.types.Operator):
 
         # check if selection is not empty
         if selection:
-
             # get all frames with assigned keyframes
             keys = get_keyframes(selection)
-
-            # print all keyframes
-            print(keys)
-
-            # print first and last keyframe
-            print("{} {}".format("first keyframe:", keys[0]))
-            print("{} {}".format("last keyframe:", keys[-1]))
-
+            for key in keys:
+                bulkposeprefix = bpy.data.scenes["Scene"].QueryProps.query
+                bpy.context.scene.frame_set(key)
+                bpy.ops.poselib.create_pose_asset(activate_new_action=True)
+                bpy.context.object.animation_data.action.name = (
+                    bulkposeprefix + " - " + str(key)
+                )
+                bpy.ops.poselib.restore_previous_action()
         else:
-            print("nothing selected")
-
-        # Execute adding to pose lib
-
-        for key in keys:
-            usertext = bpy.data.scenes["Scene"].QueryProps.query
-            bpy.context.scene.frame_set(key)
-            bpy.ops.poselib.create_pose_asset(activate_new_action=True)
-            bpy.context.object.animation_data.action.name = usertext + " - " + str(key)
-            bpy.ops.poselib.restore_previous_action()
+            self.report(
+                {"ERROR"}, "Failed to create Bulk Pose Assets. Try selecting a bone."
+            )
         return {"FINISHED"}
 
 
