@@ -10,7 +10,7 @@ You can find the latest release [here](https://github.com/NickTiny/poselibquicka
 
 # **Usage**
 
-Using **Create Bulk Pose Assets** is very similar to Vanilla Blender's **Create Pose Asset**. The difference is that **Create Bulk Pose Assets** will automatically create new Pose Assets using the "prefix" and current frame number. It uses the frames in the current action to generate the assets. Select a catalogue and bones you would like to associate with the asset, as usual. Use **Create Bulk Pose Assets** to do this for every keyframe in your action.
+Using **Create Bulk Pose Assets** is very similar to Vanilla Blender's **Create Pose Asset** from the [Blender 3.2 Pose Library](https://docs.blender.org/manual/en/latest/animation/armatures/posing/editing/pose_library.html). The difference is that **Create Bulk Pose Assets** will automatically create multiple new Pose Assets using the "prefix" and current frame number. It uses the keyframes in the current action to generate the assets. Select a catalogue and bones you would like to associate with the asset, as usual. Use **Create Bulk Pose Assets** to do this for every keyframe in your action.
 
 1. Select an armature
 2. Switch to Pose Mode
