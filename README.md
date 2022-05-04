@@ -23,4 +23,5 @@ Using **Create Bulk Pose Assets** is very similar to Vanilla Blender's **Create 
 
 Note: There is currently no way to bulk edit assets, or bulk remove assets. Backup your files before usage. Use the Blend File view to remove multiple actions at once.
 
-![demo](https://user-images.githubusercontent.com/86638335/166613734-46a0db33-e06e-4826-8d51-bcd63471e7b5.gif)
+![demo](https://user-images.githubusercontent.com/86638335/166807860-78e0fdaa-a6a2-40e0-9fde-cfa9d8a2b471.gif)
+
