@@ -15,3 +15,5 @@ Using **Create Bulk Pose Assets** is very similar to Vanilla Blender's **Create 
 5. Select the bone(s) in the 3D Viewpor
 6. Enter a prefix in the text field
 7. Hit the **Create Bulk Pose Assets** to generate new assets.
+
+![demo](https://user-images.githubusercontent.com/86638335/166613734-46a0db33-e06e-4826-8d51-bcd63471e7b5.gif)
