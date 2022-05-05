@@ -14,7 +14,7 @@ Using **Create Bulk Pose Assets** is very similar to Vanilla Blender's **Create 
 
 1. Select an armature
 2. Switch to Pose Mode
-3. Open the Drop Sheet, Navitgate to the Pose Library Panel on the Right
+3. Open the Drop Sheet, Navigate to the Pose Library Panel on the Right
 4. Setup an action with the poses you would like to add to the library.
 5. Find the "**Create Bulk Assets** menu
 6. Select the bone(s) in the 3D Viewport. (_Error will occur if no bone is selected!_)
